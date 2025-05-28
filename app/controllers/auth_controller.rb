@@ -1,8 +1,10 @@
 class AuthController < ApplicationController
+  skip_before_action :authorize_request
+
   def login
     user = User.find_by(email: params[:email])
     if user.authenticate(params[:password])
-      expiration = Time.now.to_i + 120
+      expiration = Time.now.to_i + 60
       payload = {
         data: user.id,
         exp: expiration
@@ -10,7 +12,7 @@ class AuthController < ApplicationController
       token = JWT.encode(payload, Rails.application.credentials.secret_key_base)
       render json: { access_token: token, expires_at: Time.at(expiration) }
     else
-      render json: { error: "Invald credentials" }, status: :unauthorized
+      render json: { error: "Invalid credentials" }, status: :unauthorized
     end
   end
 end
