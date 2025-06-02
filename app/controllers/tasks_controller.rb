@@ -1,5 +1,5 @@
 class TasksController < ApplicationController
-  before_action :set_task, only: [:show, :update, :destroy]
+  before_action :set_task, only: [:show, :update, :destroy, :history]
 
   def index
     tasks = current_user.tasks.order(created_at: :desc)   
@@ -30,6 +30,18 @@ class TasksController < ApplicationController
   def destroy
     @task.destroy
     render :not_content
+  end
+
+  def history
+    history = @task.versions.map do |version|
+      {
+        event: version.event,
+        changed_by: User.find_by(id: version.whodunnit)&.name,
+        changes: version.changeset,
+        changed_at: version.created_at
+      }
+    end
+    render json: history, status: :ok
   end
 
   private
