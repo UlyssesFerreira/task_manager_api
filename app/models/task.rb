@@ -1,5 +1,5 @@
 class Task < ApplicationRecord
-  has_paper_trail
+  has_paper_trail skip: [ :updated_at ]
   belongs_to :user
 
   enum :status, {
