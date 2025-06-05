@@ -9,6 +9,9 @@ Rails.application.routes.draw do
   # root "posts#index"
   post "/login", to: "auth#login"
   resources :tasks do
-    get "history", on: :member
+    member do
+      get "history"
+      post "restore_version"
+    end
   end
 end
