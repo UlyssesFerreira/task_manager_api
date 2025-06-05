@@ -48,3 +48,4 @@ group :development, :test do
 end
 
 gem "paper_trail"
+gem "active_model_serializers"

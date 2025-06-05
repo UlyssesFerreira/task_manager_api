@@ -4,7 +4,7 @@ class AuthController < ApplicationController
   def login
     user = User.find_by(email: params[:email])
     if user.authenticate(params[:password])
-      expiration = Time.now.to_i + 60
+      expiration = Time.now.to_i + 1.day.seconds
       payload = {
         data: user.id,
         exp: expiration

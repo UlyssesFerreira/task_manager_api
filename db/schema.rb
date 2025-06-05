@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_30_010745) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_03_015019) do
   create_table "tasks", force: :cascade do |t|
     t.string "title"
     t.string "description"
@@ -37,6 +37,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_010745) do
     t.string "item_type", null: false
     t.string "event", null: false
     t.text "object", limit: 1073741823
+    t.text "object_changes", limit: 1073741823
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
