@@ -1,0 +1,53 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/api/v1/login":
+    post:
+      summary: Authenticate user and returns a access token
+      tags:
+      - Authentication
+      parameters: []
+      responses:
+        '200':
+          description: valid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                required:
+                - access_token
+                - expires_at
+        '401':
+          description: invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: user@example.com
+                password:
+                  type: string
+                  example: '123123'
+              required:
+              - email
+              - password
+servers:
+- url: http://localhost:3000
