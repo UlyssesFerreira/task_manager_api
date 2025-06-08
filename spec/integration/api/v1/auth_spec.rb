@@ -18,7 +18,7 @@ RSpec.describe "Authentication", type: :request do
       }
 
       response "200", "valid credentials" do
-        let!(:user) { User.create(email: "user@example.com", password: "123456") }
+        let!(:user) { create(:user, password: "123456") }
         let(:credentials) { { email: user.email, password: "123456" } }
 
         # Define o formato da resposta esperada em JSON
