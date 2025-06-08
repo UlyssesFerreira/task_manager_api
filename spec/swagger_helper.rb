@@ -28,6 +28,35 @@ RSpec.configure do |config|
             scheme: :bearer,
             bearerFormat: :JWT
           }
+        },
+        schemas: {
+          errors: {
+            type: :object,
+            properties: {
+              errors: { type: :string }
+            }
+          },
+          task: {
+            type: :object,
+            properties: {
+              id: { type: :integer },
+              title: { type: :string },
+              description: { type: :string },
+              status: { type: :string },
+              due_date: { type: :string, format: :date_time },
+              created_at: { type: :string, format: :date_time },
+              updated_at: { type: :string, format: :date_time }
+            }
+          },
+          new_task: {
+            properties: {
+              title: { type: :string },
+              description: { type: :string, nullable: true },
+              status: { type: :string, nullable: true },
+              due_date: { type: :string, format: :date_time, nullable: true }
+            },
+            required: ["title"]
+          }
         }
       },
       paths: {},

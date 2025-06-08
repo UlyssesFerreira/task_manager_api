@@ -9,6 +9,48 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+  schemas:
+    errors:
+      type: object
+      properties:
+        errors:
+          type: string
+    task:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+        due_date:
+          type: string
+          format: date_time
+        created_at:
+          type: string
+          format: date_time
+        updated_at:
+          type: string
+          format: date_time
+    new_task:
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        status:
+          type: string
+          nullable: true
+        due_date:
+          type: string
+          format: date_time
+          nullable: true
+      required:
+      - title
 paths:
   "/api/v1/login":
     post:
@@ -73,27 +115,60 @@ paths:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    title:
-                      type: string
-                    description:
-                      type: string
-                    status:
-                      type: string
-                    due_date:
-                      type: string
-                      format: date_time
-                    user_id:
-                      type: integer
-                  required:
-                  - id
-                  - title
-                  - description
-                  - status
-                  - due_date
-                  - user_id
+                  "$ref": "#/components/schemas/task"
+    post:
+      summary: Create task
+      tags:
+      - Tasks
+      security:
+      - bearerAuth: []
+      parameters: []
+      responses:
+        '201':
+          description: create a task
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/task"
+        '422':
+          description: invalid fields
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/new_task"
+  "/api/v1/tasks/{id}":
+    get:
+      summary: List task by ID
+      tags:
+      - Tasks
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+      responses:
+        '200':
+          description: list task
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/task"
+        '404':
+          description: task not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
 servers:
 - url: http://localhost:3000
