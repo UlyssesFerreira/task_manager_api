@@ -74,4 +74,25 @@ RSpec.describe "Tasks", type: :request do
       end
     end
   end
+
+  path "/api/v1/tasks/{id}" do
+    put("Update task") do
+      tags "Tasks" 
+      consumes "application/json"
+      produces "application/json"
+      security [ bearerAuth: [] ]
+      parameter name: :id, in: :path
+      parameter name: :task_body, in: :body, schema: { "$ref" => "#/components/schemas/new_task" }
+
+      response "200", "update task" do
+        let(:task) { create(:task, user: user) }
+        let(:id) { task.id }
+        let(:task_body) { { title: "Updated title" } }
+
+        schema "$ref" => "#/components/schemas/task"
+
+        run_test!
+      end
+    end
+  end
 end

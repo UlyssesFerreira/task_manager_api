@@ -14,7 +14,7 @@ components:
       type: object
       properties:
         errors:
-          type: string
+          type: array
     task:
       type: object
       properties:
@@ -164,11 +164,28 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                required:
-                - error
+                "$ref": "#/components/schemas/errors"
+    put:
+      summary: Update task
+      tags:
+      - Tasks
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+      responses:
+        '200':
+          description: update task
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/task"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/new_task"
 servers:
 - url: http://localhost:3000

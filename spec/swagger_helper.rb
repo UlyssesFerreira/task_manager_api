@@ -33,7 +33,7 @@ RSpec.configure do |config|
           errors: {
             type: :object,
             properties: {
-              errors: { type: :string }
+              errors: { type: :array }
             }
           },
           task: {
