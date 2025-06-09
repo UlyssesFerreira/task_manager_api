@@ -4,6 +4,6 @@ FactoryBot.define do
     description { "Description Test Task" }
     status { "pending" }
     due_date { DateTime.tomorrow }
-    user 
+    user
   end
 end

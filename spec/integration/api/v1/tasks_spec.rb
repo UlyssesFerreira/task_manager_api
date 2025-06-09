@@ -77,7 +77,7 @@ RSpec.describe "Tasks", type: :request do
 
   path "/api/v1/tasks/{id}" do
     put("Update task") do
-      tags "Tasks" 
+      tags "Tasks"
       consumes "application/json"
       produces "application/json"
       security [ bearerAuth: [] ]
@@ -90,6 +90,76 @@ RSpec.describe "Tasks", type: :request do
         let(:task_body) { { title: "Updated title" } }
 
         schema "$ref" => "#/components/schemas/task"
+
+        run_test!
+      end
+    end
+  end
+
+  path "/api/v1/tasks/{id}" do
+    delete("Delete task") do
+      tags "Tasks"
+      security [ bearerAuth: [] ]
+      parameter name: :id, in: :path
+
+      response "204", "delete task" do
+        let(:task) { create(:task, user: user) }
+        let(:id) { task.id }
+
+        run_test!
+      end
+    end
+  end
+
+  path "/api/v1/tasks/{id}/history" do
+    get("List task versions") do
+      tags "Tasks"
+      produces "application/json"
+      security [ bearerAuth: [] ]
+      parameter name: :id, in: :path
+
+      response "200", "list task versions" do
+        let(:task) { create(:task, user: user) }
+        let(:id) { task.id }
+
+        schema type: :array,
+          items: {
+            type: :object,
+            properties: {
+              version: { type: :integer },
+              event: { type: :string },
+              changed_by: { type: :string, nullable: true },
+              changes: { type: :object },
+              changed_at: { type: :string, format: :date_time }
+            }
+          }
+
+        run_test!
+      end
+    end
+  end
+
+  path "/api/v1/tasks/{id}/restore_version" do
+    post("Restore task version") do
+      tags "Tasks"
+      produces "application/json"
+      security [ bearerAuth: [] ]
+      parameter name: :id, in: :path
+      parameter name: :restore_version_body, in: :body,
+                schema: {
+                  type: :object,
+                  properties: {
+                    version_id: { type: :integer }
+                  }
+                }
+
+      response "200", "restore task version" do
+        let(:task) { create(:task, user: user) }
+        let(:id) { task.id }
+        let(:restore_version_body) do
+          task.update(title: "New Title")
+          { version_id: task.versions.last.id }
+        end
 
         run_test!
       end

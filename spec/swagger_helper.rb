@@ -55,7 +55,7 @@ RSpec.configure do |config|
               status: { type: :string, nullable: true },
               due_date: { type: :string, format: :date_time, nullable: true }
             },
-            required: ["title"]
+            required: [ "title" ]
           }
         }
       },

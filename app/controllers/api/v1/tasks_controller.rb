@@ -1,11 +1,11 @@
-module Api    
-  module V1  
+module Api
+  module V1
     class TasksController < ApplicationController
-      before_action :set_task, only: [:show, :update, :destroy, :history, :restore_version]
+      before_action :set_task, only: [ :show, :update, :destroy, :history, :restore_version ]
 
       def index
-        tasks = current_user.tasks.order(created_at: :desc)   
-        render json: tasks, status: :ok 
+        tasks = current_user.tasks.order(created_at: :desc)
+        render json: tasks, status: :ok
       end
 
       def show
@@ -31,7 +31,7 @@ module Api
 
       def destroy
         @task.destroy
-        render :not_content
+        head :no_content
       end
 
       def history
