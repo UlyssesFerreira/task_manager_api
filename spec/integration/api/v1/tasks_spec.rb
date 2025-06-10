@@ -142,10 +142,11 @@ RSpec.describe "Tasks", type: :request do
   path "/api/v1/tasks/{id}/restore_version" do
     post("Restore task version") do
       tags "Tasks"
+      consumes "application/json"
       produces "application/json"
       security [ bearerAuth: [] ]
       parameter name: :id, in: :path
-      parameter name: :restore_version_body, in: :body,
+      parameter name: :restore_version, in: :body,
                 schema: {
                   type: :object,
                   properties: {
@@ -155,11 +156,12 @@ RSpec.describe "Tasks", type: :request do
 
       response "200", "restore task version" do
         let(:task) { create(:task, user: user) }
-        let(:id) { task.id }
-        let(:restore_version_body) do
+        let(:version) do
           task.update(title: "New Title")
-          { version_id: task.versions.last.id }
+          task.versions.last
         end
+        let(:id) { task.id }
+        let(:restore_version) { { version_id: version.id } }
 
         run_test!
       end

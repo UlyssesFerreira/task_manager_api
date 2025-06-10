@@ -14,7 +14,7 @@ RSpec.describe "Authentication", type: :request do
           email: { type: :string, example: "user@example.com" },
           password: { type: :string, example: "123123" }
         },
-        required: ["email", "password"]
+        required: [ "email", "password" ]
       }
 
       response "200", "valid credentials" do
@@ -27,7 +27,7 @@ RSpec.describe "Authentication", type: :request do
             access_token: { type: :string },
             expires_at: { type: :string, format: :date_time }
           },
-          required: ["access_token", "expires_at"]
+          required: [ "access_token", "expires_at" ]
 
         run_test!
       end
@@ -39,7 +39,7 @@ RSpec.describe "Authentication", type: :request do
           properties: {
             error: { type: :string }
           },
-          required: ["error"]
+          required: [ "error" ]
 
         run_test!
       end
