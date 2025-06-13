@@ -1,0 +1,260 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    errors:
+      type: object
+      properties:
+        errors:
+          type: array
+    task:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+        due_date:
+          type: string
+          format: date_time
+        created_at:
+          type: string
+          format: date_time
+        updated_at:
+          type: string
+          format: date_time
+    new_task:
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        status:
+          type: string
+          nullable: true
+        due_date:
+          type: string
+          format: date_time
+          nullable: true
+      required:
+      - title
+paths:
+  "/api/v1/login":
+    post:
+      summary: Authenticate user and returns a access token
+      tags:
+      - Authentication
+      parameters: []
+      responses:
+        '200':
+          description: valid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  expires_at:
+                    type: string
+                    format: date_time
+                required:
+                - access_token
+                - expires_at
+        '401':
+          description: invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: user@example.com
+                password:
+                  type: string
+                  example: '123123'
+              required:
+              - email
+              - password
+  "/api/v1/tasks":
+    get:
+      summary: List user tasks
+      tags:
+      - Tasks
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: list tasks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/task"
+    post:
+      summary: Create task
+      tags:
+      - Tasks
+      security:
+      - bearerAuth: []
+      parameters: []
+      responses:
+        '201':
+          description: create a task
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/task"
+        '422':
+          description: invalid fields
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/new_task"
+  "/api/v1/tasks/{id}":
+    get:
+      summary: List task by ID
+      tags:
+      - Tasks
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+      responses:
+        '200':
+          description: list task
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/task"
+        '404':
+          description: task not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors"
+    put:
+      summary: Update task
+      tags:
+      - Tasks
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+      responses:
+        '200':
+          description: update task
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/task"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/new_task"
+    delete:
+      summary: Delete task
+      tags:
+      - Tasks
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+      responses:
+        '204':
+          description: delete task
+  "/api/v1/tasks/{id}/history":
+    get:
+      summary: List task versions
+      tags:
+      - Tasks
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+      responses:
+        '200':
+          description: list task versions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    version:
+                      type: integer
+                    event:
+                      type: string
+                    changed_by:
+                      type: string
+                      nullable: true
+                    changes:
+                      type: object
+                    changed_at:
+                      type: string
+                      format: date_time
+  "/api/v1/tasks/{id}/restore_version":
+    post:
+      summary: Restore task version
+      tags:
+      - Tasks
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        description: task_id
+        required: true
+      responses:
+        '200':
+          description: restore task version
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                version_id:
+                  type: integer
+servers:
+- url: http://localhost:3000

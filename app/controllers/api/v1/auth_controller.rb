@@ -5,7 +5,7 @@ module Api
 
       def login
         user = User.find_by(email: params[:email])
-        if user.authenticate(params[:password])
+        if user&.authenticate(params[:password])
           expiration = Time.now.to_i + 1.day.seconds
           payload = {
             data: user.id,

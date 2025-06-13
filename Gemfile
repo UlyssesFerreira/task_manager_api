@@ -45,7 +45,11 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  gem "rspec-rails"
+  gem "factory_bot_rails"
 end
 
 gem "paper_trail"
 gem "active_model_serializers"
+gem "rswag"
