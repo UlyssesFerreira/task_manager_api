@@ -187,5 +187,74 @@ paths:
           application/json:
             schema:
               "$ref": "#/components/schemas/new_task"
+    delete:
+      summary: Delete task
+      tags:
+      - Tasks
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+      responses:
+        '204':
+          description: delete task
+  "/api/v1/tasks/{id}/history":
+    get:
+      summary: List task versions
+      tags:
+      - Tasks
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+      responses:
+        '200':
+          description: list task versions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    version:
+                      type: integer
+                    event:
+                      type: string
+                    changed_by:
+                      type: string
+                      nullable: true
+                    changes:
+                      type: object
+                    changed_at:
+                      type: string
+                      format: date_time
+  "/api/v1/tasks/{id}/restore_version":
+    post:
+      summary: Restore task version
+      tags:
+      - Tasks
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        description: task_id
+        required: true
+      responses:
+        '200':
+          description: restore task version
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                version_id:
+                  type: integer
 servers:
 - url: http://localhost:3000

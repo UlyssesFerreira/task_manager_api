@@ -145,7 +145,7 @@ RSpec.describe "Tasks", type: :request do
       consumes "application/json"
       produces "application/json"
       security [ bearerAuth: [] ]
-      parameter name: :id, in: :path
+      parameter name: :id, in: :path, description: :task_id
       parameter name: :restore_version, in: :body,
                 schema: {
                   type: :object,
