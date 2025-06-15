@@ -11,7 +11,7 @@ module Api
             data: user.id,
             exp: expiration
           }
-          token = JWT.encode(payload, Rails.application.credentials.secret_key_base)
+          token = JWT.encode(payload, ENV.fetch("JWT_SECRET"))
           render json: { access_token: token, expires_at: Time.at(expiration) }
         else
           render json: { error: "Invalid credentials" }, status: :unauthorized

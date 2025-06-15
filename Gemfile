@@ -53,3 +53,4 @@ end
 gem "paper_trail"
 gem "active_model_serializers"
 gem "rswag"
+gem "dotenv-rails", groups: [ :development, :test ]

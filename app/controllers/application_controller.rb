@@ -12,7 +12,7 @@ class ApplicationController < ActionController::API
     header = request.headers["Authorization"]
     token = header.split(" ").last if header
     begin
-      decoded = JWT.decode(token, Rails.application.credentials.secret_key_base)[0]
+      decoded = JWT.decode(token, ENV.fetch("JWT_SECRET"))[0]
       @current_user = User.find(decoded["data"])
     rescue JWT::ExpiredSignature
       render json: { error: "Expired token" }, status: :unauthorized
