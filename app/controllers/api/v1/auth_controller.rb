@@ -6,13 +6,9 @@ module Api
       def login
         user = User.find_by(email: params[:email])
         if user&.authenticate(params[:password])
-          expiration = Time.now.to_i + 1.day.seconds
-          payload = {
-            data: user.id,
-            exp: expiration
-          }
-          token = JWT.encode(payload, ENV.fetch("JWT_SECRET"))
-          render json: { access_token: token, expires_at: Time.at(expiration) }
+          payload = { data: user.id }
+          token = JsonWebToken.encode(payload)
+          render json: { access_token: token, expires_at: 24.hours.from_now }
         else
           render json: { error: "Invalid credentials" }, status: :unauthorized
         end

@@ -1,6 +1,7 @@
 module AuthHelpers
   def auth_header(user)
-    token = JWT.encode({ data: user.id, exp: Time.now.to_i + 1.day.seconds }, ENV.fetch("JWT_SECRET"))
+    payload = { data: user.id }
+    token = JsonWebToken.encode(payload)
     { "Authorization" => "Bearer #{token}" }
   end
 end
